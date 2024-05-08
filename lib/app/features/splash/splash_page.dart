@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:puc_minas/app/core/constants/app_assets.dart';
+import 'package:puc_minas/app/core/constants/app_routes.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -15,7 +18,14 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Image.asset('assets/images/splash.png'), ElevatedButton(onPressed: () {}, child: Text('ENTRAR'))],
+          children: [
+            Image.asset(AppAssets.logo).animate().fade(begin: 0, end: 1, duration: 3.seconds),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.login);
+                },
+                child: Text('ENTRAR'))
+          ],
         ),
       ),
     );
