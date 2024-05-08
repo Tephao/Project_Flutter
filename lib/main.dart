@@ -17,9 +17,10 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
           inputDecorationTheme: InputDecorationTheme(
-              border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ))),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          )),
       routes: Routes.routes,
     );
   }

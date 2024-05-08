@@ -19,12 +19,24 @@ class _SplashPageState extends State<SplashPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(AppAssets.logo).animate().fade(begin: 0, end: 1, duration: 3.seconds),
+            Image.asset(AppAssets.logo)
+                .animate(
+                  onComplete: (controller) => controller.repeat(reverse: true),
+                )
+                .shimmer(
+                  color: Colors.white,
+                  duration: 2.seconds,
+                ),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.login);
-                },
-                child: Text('ENTRAR'))
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.login);
+              },
+              child: Text('ENTRAR'),
+            ).animate().scaleXY(
+                  begin: 0,
+                  end: 1.5,
+                  duration: 2.seconds,
+                )
           ],
         ),
       ),
