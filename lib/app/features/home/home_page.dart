@@ -27,6 +27,16 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.add);
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(
+          Icons.time_to_leave,
+          color: Colors.white,
+        ),
+      ),
       body: Container(),
     );
   }
