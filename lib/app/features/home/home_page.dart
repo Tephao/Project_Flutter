@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:puc_minas/app/core/components/vehicle_card.dart';
 import 'package:puc_minas/app/core/constants/app_routes.dart';
+import 'package:puc_minas/app/core/models/delete_alert_model.dart';
+import 'package:puc_minas/app/core/models/vehicle_model.dart';
 import 'package:puc_minas/app/features/home/home_controller.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<VehicleModel> vehicles = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +36,13 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.add);
+        onPressed: () async {
+          var vehicle = await Navigator.of(context).pushNamed(AppRoutes.add);
+
+          if (vehicle != null) {
+            vehicles.add(vehicle as VehicleModel);
+            setState(() {});
+          }
         },
         backgroundColor: Colors.green,
         child: const Icon(
@@ -37,7 +50,51 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         ),
       ),
-      body: Container(),
+      body: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(children: [
+            vehicles.isEmpty
+                ? Center(child: Text('Nenhum veiculo para exibir'))
+                : ListView.builder(
+                    itemCount: vehicles.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.endToStart,
+                        confirmDismiss: (direction) async {
+                          bool? deleted = await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return const DeleteAlertModel();
+                            },
+                          );
+
+                          if (deleted ?? false) {
+                            try {
+                              vehicles.removeAt(index);
+                              setState(() {});
+                              showTopSnackBar(
+                                Overlay.of(context),
+                                const CustomSnackBar.success(message: 'O veiculo foi excluido'),
+                              );
+                            } catch (e) {
+                              showTopSnackBar(
+                                Overlay.of(context),
+                                const CustomSnackBar.error(message: 'O veiculo não pode ser excluido'),
+                              );
+                            }
+                          }
+                          return deleted;
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: VehicleCard(vehicle: vehicles[index]),
+                        ),
+                      );
+                    },
+                  )
+          ])),
     );
   }
 }
